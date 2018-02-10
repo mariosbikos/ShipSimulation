@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\Ships">
+      <UniqueIdentifier>{4ef220ac-566f-4494-af06-a97240aae6f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Ships">
+      <UniqueIdentifier>{856ed7aa-b0f0-40a3-84e7-f9d182b1edfd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -24,12 +30,63 @@
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Ships\Ship.h">
+      <Filter>Header Files\Ships</Filter>
+    </ClInclude>
+    <ClInclude Include="Ships\PirateShip.h">
+      <Filter>Header Files\Ships</Filter>
+    </ClInclude>
+    <ClInclude Include="Ships\CargoShip.h">
+      <Filter>Header Files\Ships</Filter>
+    </ClInclude>
+    <ClInclude Include="Ships\RepairShip.h">
+      <Filter>Header Files\Ships</Filter>
+    </ClInclude>
+    <ClInclude Include="Ships\ExplorationShip.h">
+      <Filter>Header Files\Ships</Filter>
+    </ClInclude>
+    <ClInclude Include="GridPoint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HelperFunctions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OceanMap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SimulationStatics.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ShipSimulationProject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Ships\Ship.cpp">
+      <Filter>Source Files\Ships</Filter>
+    </ClCompile>
+    <ClCompile Include="Ships\PirateShip.cpp">
+      <Filter>Source Files\Ships</Filter>
+    </ClCompile>
+    <ClCompile Include="Ships\CargoShip.cpp">
+      <Filter>Source Files\Ships</Filter>
+    </ClCompile>
+    <ClCompile Include="Ships\ExplorationShip.cpp">
+      <Filter>Source Files\Ships</Filter>
+    </ClCompile>
+    <ClCompile Include="Ships\RepairShip.cpp">
+      <Filter>Source Files\Ships</Filter>
+    </ClCompile>
+    <ClCompile Include="GridPoint.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HelperFunctions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OceanMap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

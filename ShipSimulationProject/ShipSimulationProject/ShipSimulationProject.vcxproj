@@ -116,6 +116,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\Marios\Documents\Repositories\ShipSimulation\ShipSimulationProject\ShipSimulationProject\Ships;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -145,11 +146,28 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="GridPoint.h" />
+    <ClInclude Include="HelperFunctions.h" />
+    <ClInclude Include="OceanMap.h" />
+    <ClInclude Include="Ships\CargoShip.h" />
+    <ClInclude Include="Ships\ExplorationShip.h" />
+    <ClInclude Include="Ships\PirateShip.h" />
+    <ClInclude Include="Ships\RepairShip.h" />
+    <ClInclude Include="Ships\Ship.h" />
+    <ClInclude Include="SimulationStatics.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="GridPoint.cpp" />
+    <ClCompile Include="HelperFunctions.cpp" />
+    <ClCompile Include="OceanMap.cpp" />
     <ClCompile Include="ShipSimulationProject.cpp" />
+    <ClCompile Include="Ships\CargoShip.cpp" />
+    <ClCompile Include="Ships\ExplorationShip.cpp" />
+    <ClCompile Include="Ships\PirateShip.cpp" />
+    <ClCompile Include="Ships\RepairShip.cpp" />
+    <ClCompile Include="Ships\Ship.cpp" />
     <ClCompile Include="stdafx.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
