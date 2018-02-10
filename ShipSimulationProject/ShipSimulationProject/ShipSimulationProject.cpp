@@ -10,7 +10,20 @@ int main()
 	OceanMap Map;
 	Map.Init();
 
-	
+	while (true)
+	{
+		Map.PrintMap();
+		//Start Turn
+
+		//Move phase
+
+		//Action phase 
+
+		//End Turn Phase
+
+		//EndSimulation?
+		break;
+	}
 	Map.Terminate();
 	system("pause");
     return 0;

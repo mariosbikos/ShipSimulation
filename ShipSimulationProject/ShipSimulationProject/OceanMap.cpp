@@ -4,6 +4,7 @@
 #include<stdlib.h>
 #include <time.h>       /* time */
 #include "SimulationStatics.h"
+#include "GridPoint.h"
 
 int OceanMap::NumRows;
 int OceanMap::NumCols;
@@ -67,5 +68,26 @@ void OceanMap::Terminate()
 	}
 }
 
+void OceanMap::PrintMap()
+{
+	for (int Col = 0; Col < NumCols; Col++)
+	{
+		std::cout << "\t[" << Col << "]";
+	}
+	std::cout << std::endl<< std::endl;
+
+	for (int Row = 0; Row < NumRows; Row++)
+	{
+		std::cout << "["<<Row<<"]";
+		for (int Col = 0; Col < NumCols; Col++)
+		{
+			std::cout << "\t";
+			std::cout << Grid[HelperFunctions::Convert2DIndexTo1DIndex(Row, Col, NumCols)]->GetSymbol();
+		}
+		std::cout << std::endl;
+		std::cout << std::endl;
+		
+	}
+}
 
 

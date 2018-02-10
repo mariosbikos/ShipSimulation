@@ -1,16 +1,25 @@
 #pragma once
 #include <vector>
-#include "GridPoint.h"
+
+class GridPoint;
+using namespace std;
 
 class OceanMap
 {
 public:
-	std::vector<GridPoint*> Grid;
+	vector<GridPoint*> Grid;
 
 	void Init();
 	void Terminate();
+
+	void PrintMap();
+
+
+
 	static int NumRows;
 	static int NumCols;
+
+
 
 private:
 	void CreateShips();
