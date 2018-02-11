@@ -3,14 +3,19 @@
 
 class PirateShip : public Ship
 {
+
+public:
+	PirateShip();
+	virtual ~PirateShip();
+	static int PirateShipID;
+	void AttackShip(Ship* otherShip);
+
 protected:
 	virtual void DoMove();
 	virtual void DoAction();
-public:
-	void AttackShip(Ship* otherShip);
-	
-private:
-	int AttackDamage;
+	int AttackDamage=1;
 	//always speed = 1;
+
+private:
 	
 };

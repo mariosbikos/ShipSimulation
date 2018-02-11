@@ -11,15 +11,11 @@ public:
 
 	void Init();
 	void Terminate();
-
 	void PrintMap();
-
-
+	void ShowMenu();
 
 	static int NumRows;
 	static int NumCols;
-
-
 
 private:
 	void CreateShips();

@@ -1,9 +1,36 @@
 ﻿#include "GridPoint.h"
 #include <string>
 
+int GridPoint::NumOfPorts;
+int GridPoint::NumOfTreasures;
+
 GridPoint::GridPoint(int InX, int InY, int InWeatherConditionLevel, bool InHasTreasure, bool InIsPort) :X(InX), Y(InY), WeatherConditionLevel(InWeatherConditionLevel), HasTreasure(InHasTreasure), IsPort(InIsPort)
 {
-	std::cout << "GridPoint Construction: Row = " << X << ", Col= " << Y << " WeatherConditionLevel: " << WeatherConditionLevel << (HasTreasure ? "Treasure" : "") << (IsPort ? "Port" : "") << std::endl;
+	
+	if (HasTreasure)
+	{
+		NumOfTreasures++;
+	}
+
+	if (IsPort)
+	{
+		NumOfPorts++;
+	}
+	
+}
+
+GridPoint::~GridPoint()
+{
+	if (HasTreasure)
+	{
+		NumOfTreasures--;
+	}
+
+	if (IsPort)
+	{
+		NumOfPorts--;
+	}
+	
 }
 
 std::string GridPoint::GetSymbol()
@@ -15,7 +42,7 @@ std::string GridPoint::GetSymbol()
 
 	if (IsPort)
 	{
-		return "PPP";
+		return "!!!";
 	}
 
 	return "   ";

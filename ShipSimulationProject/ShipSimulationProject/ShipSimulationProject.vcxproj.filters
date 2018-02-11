@@ -54,6 +54,9 @@
     <ClInclude Include="OceanMap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Ships\ShipTypes.h">
+      <Filter>Header Files\Ships</Filter>
+    </ClInclude>
     <ClInclude Include="SimulationStatics.h">
       <Filter>Header Files</Filter>
     </ClInclude>

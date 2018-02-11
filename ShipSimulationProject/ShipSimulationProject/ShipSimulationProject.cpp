@@ -4,15 +4,17 @@
 #include "stdafx.h"
 #include <iostream>
 #include "OceanMap.h"
+#include "GridPoint.h"
 
 int main()
 {
 	OceanMap Map;
 	Map.Init();
-
+	std::cout << GridPoint::NumOfPorts;
 	while (true)
 	{
 		Map.PrintMap();
+		Map.ShowMenu();
 		//Start Turn
 
 		//Move phase
