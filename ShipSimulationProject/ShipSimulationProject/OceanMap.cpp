@@ -45,15 +45,23 @@ void OceanMap::Terminate()
 	}
 }
 
+void OceanMap::PlaceShipOnGridPoint(Ship* ShipToPlace, GridPoint* Position)
+{
+	if (!Position->HasShip())
+	{
+		Position->SetShipOnPoint(ShipToPlace);
+	}
+}
 
 void OceanMap::PlaceShipOnAvailableGridPosition(Ship* ShipToPlace)
 {
 	while (true)
 	{
 		int RandomIndexToPlaceShip = HelperFunctions::GetRandomIntWithinRange(0, (NumCols*NumRows) - 1);
-		if (Grid[RandomIndexToPlaceShip]->IsPointEmpty())
+		
+		if (!Grid[RandomIndexToPlaceShip]->HasShip() && !Grid[RandomIndexToPlaceShip]->HasPort())
 		{
-			Grid[RandomIndexToPlaceShip]->ShipOnPoint = ShipToPlace;
+			PlaceShipOnGridPoint(ShipToPlace, Grid[RandomIndexToPlaceShip]);
 			break;
 		}
 	}
@@ -63,7 +71,7 @@ void OceanMap::CreateShips()
 {
 	int AvailableEmptySpacesForShips = (NumCols*NumRows) - (GridPoint::NumOfPorts + GridPoint::NumOfTreasures);
 	//Create random ships of each type but make sure they fit the map
-	int NumOfShipsToCreate = HelperFunctions::GetRandomIntWithinRange(1, round(SimulationStatics::PercentageOfMaxRandomNumberOfShips*AvailableEmptySpacesForShips));
+	int NumOfShipsToCreate = HelperFunctions::GetRandomIntWithinRange(1, round(SimulationStatics::PercentageOfMaxRandomNumberOfShips*static_cast<double>(AvailableEmptySpacesForShips)));
 	for (int i = 0; i < NumOfShipsToCreate; i++)
 	{
 		ShipType RandomType = (ShipType)HelperFunctions::GetRandomIntWithinRange(0, ShipType::NumOfDifferentShipTypes - 1);
@@ -72,7 +80,6 @@ void OceanMap::CreateShips()
 		//Assign to random GridPoint that is not a port and does not have treasure
 		PlaceShipOnAvailableGridPosition(NewShip);
 	}
-	
 }
 
 void OceanMap::InitializeMap()
@@ -109,8 +116,6 @@ void OceanMap::QueryUserForMapSize()
 }
 
 
-
-
 void OceanMap::PrintMap()
 {
 	for (int Col = 0; Col < NumCols; Col++)
@@ -132,7 +137,7 @@ void OceanMap::PrintMap()
 	}
 }
 
-void OceanMap::ShowMenu()
+bool OceanMap::ShowMenu()
 {
 	MenuChoice Choice = MenuChoice::Invalid;
 	while (Choice == MenuChoice::Invalid)
@@ -151,6 +156,7 @@ void OceanMap::ShowMenu()
 	{
 	case MenuChoice::EndSimulation:
 		cout << "Terminating program" << endl;
+		return true;
 		break;
 	case MenuChoice::Stats:
 		cout << "Stats" << endl;
@@ -161,9 +167,43 @@ void OceanMap::ShowMenu()
 		cout << "Num Of Cargo Ships: " << CargoShip::CargoShipID << endl;
 		cout << "Num Of Repair Ships: " << RepairShip::RepairShipID << endl;
 		cout << "Num Of Exploration Ships: " << ExplorationShip::ExplorationShipID << endl;
+		
 		break;
 	default:
 		break;
 	}
+
+	return false;
+}
+
+void OceanMap::StartTurn()
+{
+	cout << "Start of Turn" << endl;
+	//Grid
+	//	AllShips
+	for (GridPoint* Point : Grid)
+	{
+		if (Point->HasShip())
+		{
+			Ship* CurrentShip = Point->GetShipOnPoint();
+			if (Point->HasBadWeatherConditions())
+			{
+				CurrentShip->ApplyDamage(SimulationStatics::DamageCausedByBadWeather);
+				cout << *CurrentShip << " got damage due to bad weather conditions at position: " << Point->GetCoordinates()<<endl;
+			}
+
+			if (Point->HasTreasure())
+			{
+				CurrentShip->IncreaseGold(SimulationStatics::GoldRewardForTreasurePoint);
+				cout << *CurrentShip << " earned Gold since he is on top of a Treasure Point at: " << Point->GetCoordinates() << endl;
+			}
+
+			if (Point->HasPort())
+			{
+
+			}
+		}
+	}
+
 }
 

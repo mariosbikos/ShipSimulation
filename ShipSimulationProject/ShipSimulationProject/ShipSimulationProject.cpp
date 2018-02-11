@@ -11,11 +11,14 @@ int main()
 	OceanMap Map;
 	Map.Init();
 	std::cout << GridPoint::NumOfPorts;
+	bool EndGame = false;
 	while (true)
 	{
 		Map.PrintMap();
-		Map.ShowMenu();
+
 		//Start Turn
+		Map.StartTurn();
+
 
 		//Move phase
 
@@ -24,8 +27,13 @@ int main()
 		//End Turn Phase
 
 		//EndSimulation?
-		break;
-		
+		EndGame = Map.ShowMenu();
+
+
+		if (EndGame)
+		{
+			break;
+		}
 	}
 
 

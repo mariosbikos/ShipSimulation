@@ -1,6 +1,8 @@
 #pragma once
 #include <iostream>
 #include <string>
+#include "Coordinates.h"
+
 class Ship;
 
 class GridPoint
@@ -9,23 +11,30 @@ public:
 	GridPoint(int InX, int InY, int InWeatherConditionLevel, bool InHasTreasure, bool InIsPort);
 	~GridPoint();
 
-	//The symbol on the map
+	Ship* GetShipOnPoint();
+
+	void SetShipOnPoint(Ship* InShip);
 	std::string GetSymbol();
 
 	static int NumOfTreasures;
 	static int NumOfPorts;
 
-	//points to a ship that may occupy this point
-	Ship* ShipOnPoint = nullptr;
 
-	bool IsPointEmpty();
+	bool HasBadWeatherConditions() const;
+	
+	bool HasPort() const;
+	bool HasTreasure() const;
+	bool HasShip() const;
+
+	const Position2D& GetCoordinates();
 private:
-	int X;
-	int Y;
+	Position2D CoordinatesOnGrid;
 	int WeatherConditionLevel; //between 1-10
-	bool HasTreasure = false;
+	bool IsTreasure = false;
 	bool IsPort = false;
 
+	//points to a ship that may occupy this point
+	Ship* ShipOnPoint = nullptr;
 	
 	
 };

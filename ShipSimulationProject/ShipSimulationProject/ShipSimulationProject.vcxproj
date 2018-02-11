@@ -148,6 +148,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Coordinates.h" />
     <ClInclude Include="GridPoint.h" />
     <ClInclude Include="HelperFunctions.h" />
     <ClInclude Include="OceanMap.h" />
@@ -162,6 +163,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Coordinates.cpp" />
     <ClCompile Include="GridPoint.cpp" />
     <ClCompile Include="HelperFunctions.cpp" />
     <ClCompile Include="OceanMap.cpp" />

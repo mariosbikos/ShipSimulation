@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 #include "Ship.h"
 #include "PirateShip.h"
 #include "CargoShip.h"
@@ -6,6 +7,7 @@
 #include "ExplorationShip.h"
 #include "ShipTypes.h"
 #include "ShipSimulationProject/SimulationStatics.h"
+#include <algorithm>
 
 int Ship::NumOfShips;
 
@@ -20,7 +22,12 @@ void Ship::Move()
 Ship::Ship()
 {
 	NumOfShips++;
+
 	MaxDurability = SimulationStatics::ShipMaxDurability;
+	CurrentDurability = MaxDurability;
+
+	Speed = 1;
+
 }
 
 Ship::~Ship()
@@ -57,7 +64,7 @@ Ship* Ship::CreateShip(ShipType ShipChoice)
 	return nullptr;
 }
 
-std::string Ship::GetShipName()
+std::string Ship::GetShipName() const
 {
 	return Name;
 }
@@ -70,5 +77,40 @@ void Ship::ApplyDamage(const int DamageValue)
 void Ship::IncreaseGold(const double GoldAmount)
 {
 	Gold += GoldAmount;
+}
+
+double Ship::GetCurrentGold() const
+{
+	return Gold;
+}
+
+bool Ship::IsDamaged() const
+{
+	return CurrentDurability < MaxDurability;
+}
+
+void Ship::RepairShipDurability(const int DurabilityAdded)
+{
+	CurrentDurability += DurabilityAdded;
+	if (CurrentDurability > MaxDurability)
+	{
+		CurrentDurability = MaxDurability;
+	}
+}
+
+int Ship::GetCurrentDurability() const
+{
+	return CurrentDurability;
+}
+
+int Ship::GetMaxDurability() const
+{
+	return MaxDurability;
+}
+
+ostream& operator<<(ostream& os, const Ship& dt)
+{
+	os << dt.Name.c_str();
+	return os;
 }
 

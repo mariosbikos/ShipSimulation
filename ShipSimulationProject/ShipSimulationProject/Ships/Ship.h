@@ -1,6 +1,11 @@
 #pragma once 
 #include <iostream>
+#include <string>
+
 enum ShipType : int;
+
+using namespace std;
+
 
 class Ship
 {
@@ -12,18 +17,24 @@ public:
 	void Action();
 	void Move();
 
-	static int NumOfShips;
+	static int NumOfShips; //Total Num of ships of all types
 	static Ship* CreateShip(ShipType ShipChoice); //Factory Method
 
 	void ApplyDamage(const int DamageValue);
-	void IncreaseGold(const double GoldAmount);
+	void IncreaseGold(const double GoldAmount); 
+	double GetCurrentGold() const;
+	bool IsDamaged() const;
+	void RepairShipDurability(const int DurabilityAdded);
+	int GetCurrentDurability() const;
+	int GetMaxDurability() const;
+	std::string GetShipName() const;
 
-	std::string GetShipName();
+	friend ostream& operator<<(ostream& os, const Ship& dt);
 protected: 
 	int CurrentDurability;
 	int MaxDurability;
 	int Speed;
-	double Gold;
+	double Gold=0;
 
 	std::string Name;
 
@@ -31,3 +42,4 @@ protected:
 	virtual void DoAction() = 0;
 
 };
+

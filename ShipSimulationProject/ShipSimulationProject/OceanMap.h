@@ -14,8 +14,13 @@ public:
 	void Init();
 	void PlaceShipOnAvailableGridPosition(Ship* ShipToPlace);
 	void Terminate();
+	void PlaceShipOnGridPoint(Ship* ShipToPlace, GridPoint* Position);
 	void PrintMap();
-	void ShowMenu();
+	bool ShowMenu();
+	void StartTurn();
+
+	
+
 
 	static int NumRows;
 	static int NumCols;
