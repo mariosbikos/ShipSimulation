@@ -15,7 +15,10 @@ public:
 	static int NumOfTreasures;
 	static int NumOfPorts;
 
+	//points to a ship that may occupy this point
+	Ship* ShipOnPoint = nullptr;
 
+	bool IsPointEmpty();
 private:
 	int X;
 	int Y;
@@ -23,6 +26,6 @@ private:
 	bool HasTreasure = false;
 	bool IsPort = false;
 
-	//points to a ship that may occupy this point
-	Ship* ShipOnPoint = nullptr;
+	
+	
 };

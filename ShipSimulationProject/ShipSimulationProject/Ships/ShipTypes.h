@@ -2,7 +2,7 @@
 
 enum ShipType : int
 {
-	PirateShipType,
+	PirateShipType=0,
 	CargoShipType,
 	RepairShipType,
 	ExplorationShipType,

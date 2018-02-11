@@ -1,12 +1,15 @@
 #include "CargoShip.h"
 #include "ShipSimulationProject/SimulationStatics.h"
+#include "ShipSimulationProject/HelperFunctions.h"
+#include <string>
+
 
 int CargoShip::CargoShipID;
 
 CargoShip::CargoShip()
 {
 	CargoShipID++;
-	this->Name = "C" + CargoShipID;
+	this->Name = "C" + HelperFunctions::ShipIDToString(CargoShipID);
 }
 
 CargoShip::~CargoShip()

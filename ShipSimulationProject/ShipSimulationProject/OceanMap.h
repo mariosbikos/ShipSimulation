@@ -2,14 +2,17 @@
 #include <vector>
 
 class GridPoint;
+class Ship;
 using namespace std;
 
 class OceanMap
 {
 public:
 	vector<GridPoint*> Grid;
+	vector<Ship*> AllShips;
 
 	void Init();
+	void PlaceShipOnAvailableGridPosition(Ship* ShipToPlace);
 	void Terminate();
 	void PrintMap();
 	void ShowMenu();

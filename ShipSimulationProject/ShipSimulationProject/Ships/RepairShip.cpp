@@ -1,12 +1,13 @@
 #include "RepairShip.h"
 #include "ShipSimulationProject/Ships/Ship.h"
+#include "ShipSimulationProject/HelperFunctions.h"
 
 int RepairShip::RepairShipID;
 
 RepairShip::RepairShip()
 {
 	RepairShipID++;
-	this->Name = "R" + RepairShipID;
+	this->Name = "R" + HelperFunctions::ShipIDToString(RepairShipID);
 }
 
 RepairShip::~RepairShip()

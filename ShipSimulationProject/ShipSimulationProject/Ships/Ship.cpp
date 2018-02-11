@@ -69,6 +69,6 @@ void Ship::ApplyDamage(const int DamageValue)
 
 void Ship::IncreaseGold(const double GoldAmount)
 {
-	Gold += GoldAmount
+	Gold += GoldAmount;
 }
 

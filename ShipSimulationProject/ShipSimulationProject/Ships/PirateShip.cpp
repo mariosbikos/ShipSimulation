@@ -1,12 +1,13 @@
 #include "PirateShip.h"
 #include "ShipSimulationProject/Ships/Ship.h"
+#include "ShipSimulationProject/HelperFunctions.h"
 
 int PirateShip::PirateShipID;
 
 PirateShip::PirateShip()
 {
 	PirateShipID++;
-	this->Name = "P" + PirateShipID;
+	this->Name = "P" + HelperFunctions::ShipIDToString(PirateShipID);
 }
 
 PirateShip::~PirateShip()

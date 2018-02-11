@@ -25,8 +25,13 @@ int main()
 
 		//EndSimulation?
 		break;
+		
 	}
+
+
 	Map.Terminate();
+
+
 	system("pause");
     return 0;
 }
