@@ -13,14 +13,12 @@ public:
 
 	void Init();
 	void PlaceShipOnAvailableGridPosition(Ship* ShipToPlace);
-	void Terminate();
 	void PlaceShipOnGridPoint(Ship* ShipToPlace, GridPoint* Position);
+	void Terminate();
 	void PrintMap();
 	bool ShowMenu();
 	void StartTurn();
-
-	
-
+	vector<GridPoint*> GetNeighborsForPoint(GridPoint* position);
 
 	static int NumRows;
 	static int NumCols;
@@ -29,4 +27,6 @@ private:
 	void CreateShips();
 	void InitializeMap();
 	void QueryUserForMapSize();
+
+	void ApplyChangesToPortNeighbors(GridPoint* PortPoint);
 };

@@ -76,7 +76,9 @@ void OceanMap::CreateShips()
 	{
 		ShipType RandomType = (ShipType)HelperFunctions::GetRandomIntWithinRange(0, ShipType::NumOfDifferentShipTypes - 1);
 		Ship* NewShip = Ship::CreateShip(RandomType);
+
 		AllShips.push_back(NewShip);
+
 		//Assign to random GridPoint that is not a port and does not have treasure
 		PlaceShipOnAvailableGridPosition(NewShip);
 	}
@@ -183,6 +185,11 @@ void OceanMap::StartTurn()
 	//	AllShips
 	for (GridPoint* Point : Grid)
 	{
+		if (Point->IsEmpty())
+		{
+			continue;
+		}
+
 		if (Point->HasShip())
 		{
 			Ship* CurrentShip = Point->GetShipOnPoint();
@@ -195,15 +202,74 @@ void OceanMap::StartTurn()
 			if (Point->HasTreasure())
 			{
 				CurrentShip->IncreaseGold(SimulationStatics::GoldRewardForTreasurePoint);
-				cout << *CurrentShip << " earned Gold since he is on top of a Treasure Point at: " << Point->GetCoordinates() << endl;
+				cout << *CurrentShip << " earned Gold since it is on top of a Treasure Point at: " << Point->GetCoordinates() << endl;
 			}
+		}
 
-			if (Point->HasPort())
+		if (Point->HasPort())
+		{
+			ApplyChangesToPortNeighbors(Point);
+		}
+	}
+
+}
+
+void OceanMap::ApplyChangesToPortNeighbors(GridPoint* PortPoint)
+{
+
+	//Need vector of GridPoints neighbors
+	std::vector<GridPoint*>& Neighbors = GetNeighborsForPoint(PortPoint);
+	for (GridPoint* NeighborPoint : Neighbors)
+	{
+		Ship* NeighborShip = NeighborPoint->GetShipOnPoint();
+		if (NeighborShip)
+		{
+			PirateShip* PirateNeighbor = dynamic_cast<PirateShip*>(NeighborShip);
+			if (PirateNeighbor)
 			{
-
+				NeighborShip->ApplyDamage(SimulationStatics::DamageCausedToPirateShipByPort);
+				cout << *NeighborShip << " at Point: " << NeighborPoint->GetCoordinates() << " got Damage due to Port at : " << PortPoint->GetCoordinates() << endl;
+			}
+			else
+			{
+				NeighborShip->RepairShipDurabilityFromPort();
+				cout << *NeighborShip << " at Point: " << NeighborPoint->GetCoordinates() << " was repaired from neighbor Port at: " << PortPoint->GetCoordinates() << endl;
 			}
 		}
 	}
 
+}
+
+std::vector<GridPoint*> OceanMap::GetNeighborsForPoint(GridPoint* position)
+{
+	std::vector<GridPoint*> NeighborPoints;
+	Position2D CurrentPositionCoords = position->GetCoordinates();
+
+	if (CurrentPositionCoords.Y < NumCols-1)
+	{
+		//right(always, unless col=numCols-1)
+		NeighborPoints.push_back(Grid[HelperFunctions::Convert2DIndexTo1DIndex(CurrentPositionCoords.X, CurrentPositionCoords.Y + 1, NumCols)]);
+	}
+	
+	if (CurrentPositionCoords.Y > 0)
+	{
+		//left(always unless col=0)
+		NeighborPoints.push_back(Grid[HelperFunctions::Convert2DIndexTo1DIndex(CurrentPositionCoords.X, CurrentPositionCoords.Y - 1, NumCols)]);
+	}
+	
+	if (CurrentPositionCoords.X > 0)
+	{
+		//Up(always unless row=0)
+		NeighborPoints.push_back(Grid[HelperFunctions::Convert2DIndexTo1DIndex(CurrentPositionCoords.X - 1, CurrentPositionCoords.Y, NumCols)]);
+
+	}
+
+	if (CurrentPositionCoords.X < NumRows-1)
+	{
+		//down(always unless row = numRows-1)
+		NeighborPoints.push_back(Grid[HelperFunctions::Convert2DIndexTo1DIndex(CurrentPositionCoords.X + 1, CurrentPositionCoords.Y, NumCols)]);
+	}
+
+	return NeighborPoints;
 }
 

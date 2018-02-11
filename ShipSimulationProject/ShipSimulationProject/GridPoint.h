@@ -23,6 +23,7 @@ public:
 	bool HasBadWeatherConditions() const;
 	
 	bool HasPort() const;
+	bool IsEmpty() const;
 	bool HasTreasure() const;
 	bool HasShip() const;
 

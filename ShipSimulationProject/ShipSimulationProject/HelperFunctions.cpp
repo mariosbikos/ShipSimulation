@@ -23,6 +23,15 @@ int HelperFunctions::GetRandomIntWithinRange(const int Min, const int Max)
 	return distr(eng);
 }
 
+float HelperFunctions::GetRandomFloatWithinRange(const float Min, const float Max)
+{
+	std::random_device rd; // obtain a random number from hardware
+	std::mt19937 eng(rd()); // seed the generator
+	std::uniform_real_distribution<> distr(Min, Max); // define the range
+
+	return distr(eng);
+}
+
 std::string HelperFunctions::ShipIDToString(const int ID)
 {
 	std::stringstream ss;

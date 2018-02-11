@@ -24,15 +24,15 @@ public:
 	void IncreaseGold(const double GoldAmount); 
 	double GetCurrentGold() const;
 	bool IsDamaged() const;
-	void RepairShipDurability(const int DurabilityAdded);
-	int GetCurrentDurability() const;
-	int GetMaxDurability() const;
+	void RepairShipDurabilityFromPort();
+	double GetCurrentDurability() const;
+	double GetMaxDurability() const;
 	std::string GetShipName() const;
 
 	friend ostream& operator<<(ostream& os, const Ship& dt);
 protected: 
-	int CurrentDurability;
-	int MaxDurability;
+	double CurrentDurability;
+	double MaxDurability;
 	int Speed;
 	double Gold=0;
 

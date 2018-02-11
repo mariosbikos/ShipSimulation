@@ -48,7 +48,10 @@ bool GridPoint::HasPort() const
 	return IsPort;
 }
 
-
+bool GridPoint::IsEmpty() const
+{
+	return (!IsPort && !IsTreasure && !ShipOnPoint);
+}
 
 bool GridPoint::HasTreasure() const
 {
@@ -96,8 +99,6 @@ std::string GridPoint::GetSymbol()
 	{
 		return "!!!";
 	}
-
-	
 
 	return "   ";
 }

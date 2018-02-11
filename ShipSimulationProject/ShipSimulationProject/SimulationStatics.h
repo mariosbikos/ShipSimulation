@@ -14,6 +14,7 @@ namespace SimulationStatics
 	const double PercentageOfMaxRandomNumberOfShips = 0.2;
 
 	const int DamageCausedByBadWeather = 7;
+	const int DamageCausedToPirateShipByPort = 2;
 
 	const double GoldRewardForTreasurePoint = 2.0;
 

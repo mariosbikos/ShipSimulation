@@ -7,6 +7,7 @@
 #include "ExplorationShip.h"
 #include "ShipTypes.h"
 #include "ShipSimulationProject/SimulationStatics.h"
+#include "ShipSimulationProject/HelperFunctions.h"
 #include <algorithm>
 
 int Ship::NumOfShips;
@@ -89,21 +90,21 @@ bool Ship::IsDamaged() const
 	return CurrentDurability < MaxDurability;
 }
 
-void Ship::RepairShipDurability(const int DurabilityAdded)
+void Ship::RepairShipDurabilityFromPort()
 {
-	CurrentDurability += DurabilityAdded;
+	CurrentDurability += HelperFunctions::GetRandomFloatWithinRange(0, 1)*CurrentDurability;
 	if (CurrentDurability > MaxDurability)
 	{
 		CurrentDurability = MaxDurability;
 	}
 }
 
-int Ship::GetCurrentDurability() const
+double Ship::GetCurrentDurability() const
 {
 	return CurrentDurability;
 }
 
-int Ship::GetMaxDurability() const
+double Ship::GetMaxDurability() const
 {
 	return MaxDurability;
 }
