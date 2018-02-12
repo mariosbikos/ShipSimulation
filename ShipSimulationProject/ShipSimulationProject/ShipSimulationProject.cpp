@@ -5,6 +5,7 @@
 #include <iostream>
 #include "OceanMap.h"
 #include "GridPoint.h"
+#include "ShipSimulationProject/Ships/Ship.h"
 
 int main()
 {
@@ -15,7 +16,7 @@ int main()
 	while (true)
 	{
 		Map.PrintMap();
-
+		
 		//Start Turn
 		Map.StartTurn();
 
@@ -25,10 +26,13 @@ int main()
 		//Action phase 
 
 		//End Turn Phase
+		Map.EndTurn();
+
 
 		//EndSimulation?
 		EndGame = Map.ShowMenu();
-
+		
+		EndGame = Map.CheckForEndConditions();
 
 		if (EndGame)
 		{

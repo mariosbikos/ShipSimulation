@@ -1,6 +1,7 @@
 ﻿#include "GridPoint.h"
 #include "ShipSimulationProject/Ships/Ship.h"
 #include "ShipSimulationProject/SimulationStatics.h"
+#include "HelperFunctions.h"
 #include <string>
 #include "Coordinates.h"
 
@@ -43,6 +44,15 @@ bool GridPoint::HasBadWeatherConditions() const
 	return WeatherConditionLevel >= SimulationStatics::BadWeatherThreshold;
 }
 
+void GridPoint::ChangeWeatherConditionsRandomly()
+{
+	int PreviousWeatherCondition = WeatherConditionLevel;
+	int WeatherChangeValue = HelperFunctions::GetRandomIntWithinRange(-1, 1);
+	WeatherConditionLevel = HelperFunctions::Clamp(WeatherConditionLevel +WeatherChangeValue,1,10);
+
+	cout << "Weather Conditions changed from : "<< PreviousWeatherCondition<<" to: "<<WeatherConditionLevel<<" at Point: " << this->GetCoordinates() << endl;
+}
+
 bool GridPoint::HasPort() const
 {
 	return IsPort;
@@ -61,6 +71,16 @@ bool GridPoint::HasTreasure() const
 bool GridPoint::HasShip() const
 {
 	return (ShipOnPoint != nullptr);
+}
+
+void GridPoint::MakeTreasure()
+{
+	IsTreasure = true;
+}
+
+void GridPoint::RemoveShipFromPoint()
+{
+	SetShipOnPoint(nullptr);
 }
 
 const Position2D& GridPoint::GetCoordinates()

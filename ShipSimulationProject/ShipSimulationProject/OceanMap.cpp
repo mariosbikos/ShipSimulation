@@ -1,6 +1,7 @@
 #include <iostream>
 #include<stdlib.h>
 #include <time.h>       /* time */
+#include <algorithm>   
 #include "HelperFunctions.h"
 #include "OceanMap.h"
 #include "Ships/Ship.h"
@@ -9,7 +10,7 @@
 #include "ShipSimulationProject/Ships/ExplorationShip.h"
 #include "ShipSimulationProject/Ships/RepairShip.h"
 #include "SimulationStatics.h"
-#include "GridPoint.h"
+#include "ShipSimulationProject/GridPoint.h"
 #include "Ships/ShipTypes.h"
 #include <math.h>
 
@@ -28,7 +29,7 @@ enum MenuChoice
 void OceanMap::Init()
 {
 	QueryUserForMapSize();
-	InitializeMap();
+	InitializeMapWithGridPoints();
 	CreateShips();
 }
 
@@ -53,7 +54,7 @@ void OceanMap::PlaceShipOnGridPoint(Ship* ShipToPlace, GridPoint* Position)
 	}
 }
 
-void OceanMap::PlaceShipOnAvailableGridPosition(Ship* ShipToPlace)
+void OceanMap::PlaceShipOnAvailableGridPoint(Ship* ShipToPlace)
 {
 	while (true)
 	{
@@ -69,9 +70,9 @@ void OceanMap::PlaceShipOnAvailableGridPosition(Ship* ShipToPlace)
 
 void OceanMap::CreateShips()
 {
-	int AvailableEmptySpacesForShips = (NumCols*NumRows) - (GridPoint::NumOfPorts + GridPoint::NumOfTreasures);
+	int AvailableEmptySpacesForShips = (NumCols*NumRows) - GridPoint::NumOfPorts;
 	//Create random ships of each type but make sure they fit the map
-	int NumOfShipsToCreate = HelperFunctions::GetRandomIntWithinRange(1, round(SimulationStatics::PercentageOfMaxRandomNumberOfShips*static_cast<double>(AvailableEmptySpacesForShips)));
+	int NumOfShipsToCreate = (int)HelperFunctions::GetRandomFloatWithinRange(1, HelperFunctions::Clamp(round(SimulationStatics::PercentageOfMaxRandomNumberOfShips*static_cast<double>(AvailableEmptySpacesForShips)),1.0, (double)AvailableEmptySpacesForShips));
 	for (int i = 0; i < NumOfShipsToCreate; i++)
 	{
 		ShipType RandomType = (ShipType)HelperFunctions::GetRandomIntWithinRange(0, ShipType::NumOfDifferentShipTypes - 1);
@@ -79,12 +80,11 @@ void OceanMap::CreateShips()
 
 		AllShips.push_back(NewShip);
 
-		//Assign to random GridPoint that is not a port and does not have treasure
-		PlaceShipOnAvailableGridPosition(NewShip);
+		PlaceShipOnAvailableGridPoint(NewShip);
 	}
 }
 
-void OceanMap::InitializeMap()
+void OceanMap::InitializeMapWithGridPoints()
 {
 	for (int Row = 0; Row < NumRows; Row++)
 	{
@@ -103,6 +103,7 @@ void OceanMap::InitializeMap()
 			}
 
 			int RandomWeatherConditionLevel = HelperFunctions::GetRandomIntWithinRange(1, 10);
+			
 			GridPoint* point = new GridPoint(Row, Col, RandomWeatherConditionLevel, IsPort, HasTreasure);
 			Grid.push_back(point);
 		}
@@ -178,6 +179,64 @@ bool OceanMap::ShowMenu()
 	return false;
 }
 
+bool OceanMap::CheckForEndConditions()
+{
+	if (Ship::NumOfShips == 0)
+	{
+		cout << "Game Over: All Ships have been destroyed!" << endl;
+		return true;
+	}
+
+	for (Ship* CurrentShip : AllShips)
+	{
+		if (CurrentShip->GetCurrentGold() >= SimulationStatics::TargetGold)
+		{
+			cout << "Game Over: Ship: "<< *CurrentShip << " has reached Target Gold" << endl;
+			return true;
+		}
+	}
+	return false;
+}
+
+void OceanMap::EndTurn()
+{
+	for (GridPoint* Point : Grid)
+	{
+		if (Point->IsEmpty())
+		{
+			continue;
+		}
+
+		Ship* CurrentShip = Point->GetShipOnPoint();
+		if (CurrentShip && CurrentShip->GetCurrentDurability()<=0)
+		{
+			cout << *CurrentShip << " was destroyed and replaced with Treasure at: " << Point->GetCoordinates() << endl;
+			Point->MakeTreasure();
+			DestroyShipAtPoint(Point);
+		}
+
+		Point->ChangeWeatherConditionsRandomly();
+
+
+	}
+}
+
+void OceanMap::DestroyShipAtPoint(GridPoint* Point)
+{
+	Ship* ShipToDestroy = Point->GetShipOnPoint();
+
+	std::vector<Ship*>::iterator position = std::find(AllShips.begin(), AllShips.end(), ShipToDestroy);
+	if (position != AllShips.end()) // == myVector.end() means the element was not found
+	{
+		AllShips.erase(position);
+		delete ShipToDestroy;
+	}
+		
+
+	Point->RemoveShipFromPoint();
+}
+
+
 void OceanMap::StartTurn()
 {
 	cout << "Start of Turn" << endl;
@@ -190,9 +249,9 @@ void OceanMap::StartTurn()
 			continue;
 		}
 
-		if (Point->HasShip())
+		Ship* CurrentShip = Point->GetShipOnPoint();
+		if (CurrentShip)
 		{
-			Ship* CurrentShip = Point->GetShipOnPoint();
 			if (Point->HasBadWeatherConditions())
 			{
 				CurrentShip->ApplyDamage(SimulationStatics::DamageCausedByBadWeather);
@@ -216,7 +275,6 @@ void OceanMap::StartTurn()
 
 void OceanMap::ApplyChangesToPortNeighbors(GridPoint* PortPoint)
 {
-
 	//Need vector of GridPoints neighbors
 	std::vector<GridPoint*>& Neighbors = GetNeighborsForPoint(PortPoint);
 	for (GridPoint* NeighborPoint : Neighbors)

@@ -21,11 +21,15 @@ public:
 
 
 	bool HasBadWeatherConditions() const;
+	void ChangeWeatherConditionsRandomly();
 	
 	bool HasPort() const;
 	bool IsEmpty() const;
 	bool HasTreasure() const;
 	bool HasShip() const;
+	void MakeTreasure();
+
+	void RemoveShipFromPoint();
 
 	const Position2D& GetCoordinates();
 private:

@@ -18,4 +18,6 @@ namespace SimulationStatics
 
 	const double GoldRewardForTreasurePoint = 2.0;
 
+	const double TargetGold = 20.0;
+
 }

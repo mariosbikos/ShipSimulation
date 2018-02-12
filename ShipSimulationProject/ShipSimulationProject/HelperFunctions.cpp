@@ -14,6 +14,7 @@ void HelperFunctions::Convert1DIndexTo2DIndex(const int Index,const int NumCols,
 	OutCol = Index % NumCols;
 }
 
+
 int HelperFunctions::GetRandomIntWithinRange(const int Min, const int Max)
 {
 	std::random_device rd; // obtain a random number from hardware
@@ -27,7 +28,7 @@ float HelperFunctions::GetRandomFloatWithinRange(const float Min, const float Ma
 {
 	std::random_device rd; // obtain a random number from hardware
 	std::mt19937 eng(rd()); // seed the generator
-	std::uniform_real_distribution<> distr(Min, Max); // define the range
+	std::uniform_real_distribution<float> distr(Min, Max); // define the range
 
 	return distr(eng);
 }
