@@ -9,5 +9,4 @@ public:
 	static int RepairShipID;
 private:
 	virtual void DoAction();
-	virtual void DoMove();
 };

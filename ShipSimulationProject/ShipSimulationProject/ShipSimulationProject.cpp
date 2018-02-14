@@ -20,18 +20,17 @@ int main()
 		//Start Turn
 		Map.StartTurn();
 
-
 		//Move phase
+		Map.ShipsMovePhase();
 
 		//Action phase 
-
+		Map.ShipsActionPhase();
 		//End Turn Phase
 		Map.EndTurn();
 
 
 		//EndSimulation?
 		EndGame = Map.ShowMenu();
-		
 		EndGame = Map.CheckForEndConditions();
 
 		if (EndGame)

@@ -31,7 +31,8 @@ public:
 
 	void RemoveShipFromPoint();
 
-	const Position2D& GetCoordinates();
+	Position2D& GetCoordinates();
+	void SetCoordinates(const Position2D& InCoords);
 private:
 	Position2D CoordinatesOnGrid;
 	int WeatherConditionLevel; //between 1-10

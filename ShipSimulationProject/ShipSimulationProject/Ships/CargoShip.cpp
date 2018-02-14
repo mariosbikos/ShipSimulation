@@ -23,11 +23,6 @@ void CargoShip::DoAction()
 	GainGoldFromClosePort();
 }
 
-void CargoShip::DoMove()
-{
-	
-}
-
 void CargoShip::GainGoldFromClosePort()
 {
 	this->Gold += SimulationStatics::NearPortGoldIncreaseForCargoShip;

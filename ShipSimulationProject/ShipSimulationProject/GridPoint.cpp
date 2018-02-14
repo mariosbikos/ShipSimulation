@@ -6,7 +6,7 @@
 #include "Coordinates.h"
 
 int GridPoint::NumOfPorts;
-
+int GridPoint::NumOfTreasures;
 
 GridPoint::GridPoint(int InX, int InY, int InWeatherConditionLevel, bool InHasTreasure, bool InIsPort) :
 	CoordinatesOnGrid(InX,InY), WeatherConditionLevel(InWeatherConditionLevel), IsTreasure(InHasTreasure), IsPort(InIsPort)
@@ -83,13 +83,15 @@ void GridPoint::RemoveShipFromPoint()
 	SetShipOnPoint(nullptr);
 }
 
-const Position2D& GridPoint::GetCoordinates()
+Position2D& GridPoint::GetCoordinates()
 {
 	return CoordinatesOnGrid;
 }
 
-int GridPoint::NumOfTreasures;
-
+void GridPoint::SetCoordinates(const Position2D& InCoords)
+{
+	CoordinatesOnGrid = InCoords;
+}
 
 
 Ship* GridPoint::GetShipOnPoint()

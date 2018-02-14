@@ -9,5 +9,5 @@ public:
 	static int ExplorationShipID;
 private:
 	virtual void DoAction();
-	virtual void DoMove();
+	
 };

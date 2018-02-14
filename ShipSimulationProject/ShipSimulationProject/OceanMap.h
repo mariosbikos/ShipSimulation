@@ -34,4 +34,7 @@ private:
 
 	//If point has a pirate ship on it then damage is applied to it, otherwise the ship is repaired by a %.
 	void ApplyChangesToPortNeighbors(GridPoint* PortPoint);
+public:
+	void ShipsMovePhase();
+	void ShipsActionPhase();
 };

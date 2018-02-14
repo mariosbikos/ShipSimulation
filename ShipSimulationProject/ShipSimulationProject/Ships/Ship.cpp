@@ -8,16 +8,32 @@
 #include "ShipTypes.h"
 #include "ShipSimulationProject/SimulationStatics.h"
 #include "ShipSimulationProject/HelperFunctions.h"
+#include "ShipSimulationProject/Coordinates.h"
+#include "ShipSimulationProject/GridPoint.h"
 #include <algorithm>
+#include <vector>
 
 int Ship::NumOfShips;
 
 
-void Ship::Move()
+
+void Ship::Move(vector<GridPoint*>& Grid, GridPoint* CurrentPoint)
 {
-	//pre-move. Standard things all ships do before they move
-	this->DoMove(); //each subclass can do different things
-	//after-move. Standard things all ships do after they move
+	switch (HelperFunctions::GetRandomIntWithinRange(0, NumOfDirections - 1))
+	{
+	case MoveDirection::NORTH:
+		if((CurrentPoint->GetCoordinates()+Position2D::UP()*Speed).X>0)
+		break;
+	case MoveDirection::EAST:
+		break;
+	case MoveDirection::WEST:
+		break;
+	case MoveDirection::SOUTH:
+		break;
+	default:
+		break;
+	}
+	
 }
 
 Ship::Ship()
@@ -26,8 +42,7 @@ Ship::Ship()
 
 	MaxDurability = SimulationStatics::ShipMaxDurability;
 	CurrentDurability = MaxDurability;
-
-	Speed = 1;
+	Speed = HelperFunctions::GetRandomIntWithinRange(2, 3);
 
 }
 

@@ -8,6 +8,7 @@ PirateShip::PirateShip()
 {
 	PirateShipID++;
 	this->Name = "P" + HelperFunctions::ShipIDToString(PirateShipID);
+	Speed = 1;
 }
 
 PirateShip::~PirateShip()
@@ -15,10 +16,7 @@ PirateShip::~PirateShip()
 	PirateShipID--;
 }
 
-void PirateShip::DoMove()
-{
-	
-}
+
 
 void PirateShip::DoAction()
 {

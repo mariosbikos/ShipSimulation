@@ -1,8 +1,9 @@
 #pragma once 
 #include <iostream>
 #include <string>
-
+#include <vector>
 enum ShipType : int;
+class GridPoint;
 
 using namespace std;
 
@@ -15,7 +16,7 @@ public:
 	virtual ~Ship();
 
 	void Action();
-	void Move();
+	void Move(vector<GridPoint*>& Grid, GridPoint* CurrentPoint);
 
 	static int NumOfShips; //Total Num of ships of all types
 	static Ship* CreateShip(ShipType ShipChoice); //Factory Method
@@ -38,7 +39,7 @@ protected:
 
 	std::string Name;
 
-	virtual void DoMove() = 0;
+
 	virtual void DoAction() = 0;
 
 };

@@ -11,7 +11,7 @@ public:
 	void AttackShip(Ship* otherShip);
 
 protected:
-	virtual void DoMove();
+	
 	virtual void DoAction();
 	int AttackDamage = 1;
 	//always speed = 1;

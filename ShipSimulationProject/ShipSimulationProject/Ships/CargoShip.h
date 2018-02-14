@@ -9,7 +9,6 @@ public:
 	static int CargoShipID;
 private:
 	virtual void DoAction();
-	virtual void DoMove();
 
 	void GainGoldFromClosePort();
 };

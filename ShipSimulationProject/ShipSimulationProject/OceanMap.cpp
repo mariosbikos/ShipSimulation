@@ -298,6 +298,41 @@ void OceanMap::ApplyChangesToPortNeighbors(GridPoint* PortPoint)
 
 }
 
+void OceanMap::ShipsMovePhase()
+{
+	for (GridPoint* Point : Grid)
+	{
+		if (Point->IsEmpty())
+		{
+			continue;
+		}
+
+		Ship* CurrentShip = Point->GetShipOnPoint();
+		if (CurrentShip)
+		{
+			CurrentShip->Move(Grid, Point);
+		}
+	}
+}
+
+void OceanMap::ShipsActionPhase()
+{
+	for (GridPoint* Point : Grid)
+	{
+		if (Point->IsEmpty())
+		{
+			continue;
+		}
+
+		Ship* CurrentShip = Point->GetShipOnPoint();
+		if (CurrentShip)
+		{
+
+		}
+	}
+}
+	
+
 std::vector<GridPoint*> OceanMap::GetNeighborsForPoint(GridPoint* position)
 {
 	std::vector<GridPoint*> NeighborPoints;
