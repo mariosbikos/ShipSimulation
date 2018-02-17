@@ -83,7 +83,7 @@ void GridPoint::RemoveShipFromPoint()
 	SetShipOnPoint(nullptr);
 }
 
-Position2D& GridPoint::GetCoordinates()
+const Position2D& GridPoint::GetCoordinates() const
 {
 	return CoordinatesOnGrid;
 }
@@ -123,4 +123,10 @@ std::string GridPoint::GetSymbol()
 	}
 
 	return "   ";
+}
+
+std::ostream& operator<<(std::ostream& out, const GridPoint& InPoint)
+{
+	out << "(" << InPoint.GetCoordinates().X << "," << InPoint.GetCoordinates().Y << ")";
+	return out;
 }

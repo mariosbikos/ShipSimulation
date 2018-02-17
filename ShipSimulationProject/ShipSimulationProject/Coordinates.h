@@ -15,14 +15,14 @@ enum MoveDirection
 
 struct Position2D
 {
-	Position2D(int InX, int InY)
+	Position2D(int InX =0, int InY=0)
 		:X(InX), Y(InY) {}
 
 
 	int X;
 	int Y;
 
-	friend Position2D operator+(Position2D& CurrentPosition, const Position2D& OtherPosition);
+	friend const Position2D operator+(const Position2D& CurrentPosition, const Position2D& OtherPosition);
 	friend Position2D operator*(Position2D& CurrentPosition, const int& ScalarValue);
 	friend Position2D operator*(const int& ScalarValue, Position2D& CurrentPosition);
 
@@ -31,8 +31,10 @@ struct Position2D
 	static Position2D LEFT();
 	static Position2D RIGHT();
 	friend ostream& operator<<(ostream &strm, const Position2D &a);
+
+	bool AreCoordinatesValidOnMap();
 };
 
-Position2D operator+(Position2D& CurrentPosition, const Position2D& OtherPosition);
+const Position2D operator+(const Position2D& CurrentPosition, const Position2D& OtherPosition);
 Position2D operator*(Position2D& CurrentPosition, const int& ScalarValue);
 Position2D operator*(const int& ScalarValue, Position2D& CurrentPosition);

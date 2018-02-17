@@ -31,8 +31,10 @@ public:
 
 	void RemoveShipFromPoint();
 
-	Position2D& GetCoordinates();
+	const Position2D& GetCoordinates() const;
 	void SetCoordinates(const Position2D& InCoords);
+
+	friend std::ostream& operator<<(std::ostream& out, const GridPoint& Point);
 private:
 	Position2D CoordinatesOnGrid;
 	int WeatherConditionLevel; //between 1-10
@@ -44,3 +46,5 @@ private:
 	
 	
 };
+
+std::ostream& operator<<(std::ostream& out, const GridPoint& Point);

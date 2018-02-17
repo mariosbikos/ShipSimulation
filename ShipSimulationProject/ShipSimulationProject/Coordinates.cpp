@@ -1,4 +1,5 @@
 #include "Coordinates.h"
+#include "OceanMap.h"
 #include <iostream>
 
 
@@ -7,7 +8,7 @@ ostream& operator<<(ostream &strm, const Position2D &a)
 	return strm << "(" << a.X << "," << a.Y << ")";
 }
 
-Position2D operator+(Position2D& CurrentPosition, const Position2D& OtherPosition)
+const Position2D operator+(const Position2D& CurrentPosition, const Position2D& OtherPosition)
 {
 	return Position2D(CurrentPosition.X + OtherPosition.X, CurrentPosition.Y + OtherPosition.Y);
 }
@@ -42,5 +43,11 @@ Position2D Position2D::LEFT()
 Position2D Position2D::RIGHT()
 {
 	return Position2D(0 , 1);
+}
+
+bool Position2D::AreCoordinatesValidOnMap()
+{
+	return X >= 0 && X < OceanMap::NumRows && Y >= 0 && Y < OceanMap::NumCols;
+		
 }
 
