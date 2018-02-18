@@ -21,6 +21,8 @@ PirateShip::~PirateShip()
 void PirateShip::DoAction()
 {
 	//Attacks ship in neighborhood + steals gold from it
+	
+
 }
 
 void PirateShip::AttackShip(Ship* otherShip)

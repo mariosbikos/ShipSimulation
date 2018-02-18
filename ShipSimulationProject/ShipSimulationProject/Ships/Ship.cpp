@@ -84,7 +84,7 @@ void Ship::Move(vector<GridPoint*>& Grid, GridPoint* CurrentPoint)
 
 		if (ShipCanMoveToNewPosition)
 		{
-			Grid[HelperFunctions::Convert2DIndexTo1DIndex(NewPosition.X, NewPosition.Y, OceanMap::NumCols)]->SetShipOnPoint(this);
+			Grid[IndexToNewPosition]->SetShipOnPoint(this);
 			CurrentPoint->RemoveShipFromPoint();
 			std::cout << "Ship: " << *this << " moved from Position: " << *CurrentPoint << " to position: " << NewPosition << std::endl;
 			break;
@@ -144,6 +144,17 @@ Ship* Ship::CreateShip(ShipType ShipChoice)
 std::string Ship::GetShipName() const
 {
 	return Name;
+}
+
+void Ship::SetShipGridPoint(GridPoint* InGridPoint)
+{
+	ShipGridPoint = InGridPoint;
+}
+
+
+GridPoint* Ship::GetShipGridPoint() const
+{
+	return ShipGridPoint;
 }
 
 void Ship::ApplyDamage(const int DamageValue)

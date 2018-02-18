@@ -46,23 +46,18 @@ void OceanMap::Terminate()
 	}
 }
 
-void OceanMap::PlaceShipOnGridPoint(Ship* ShipToPlace, GridPoint* Position)
-{
-	if (!Position->HasShip())
-	{
-		Position->SetShipOnPoint(ShipToPlace);
-	}
-}
-
 void OceanMap::PlaceShipOnAvailableGridPoint(Ship* ShipToPlace)
 {
 	while (true)
 	{
 		int RandomIndexToPlaceShip = HelperFunctions::GetRandomIntWithinRange(0, (NumCols*NumRows) - 1);
-		
-		if (!Grid[RandomIndexToPlaceShip]->HasShip() && !Grid[RandomIndexToPlaceShip]->HasPort())
+		GridPoint* GridPointToPlaceShip = Grid[RandomIndexToPlaceShip];
+		if (!GridPointToPlaceShip->HasShip() && 
+			!GridPointToPlaceShip->HasPort() && 
+			!GridPointToPlaceShip->HasShip())
 		{
-			PlaceShipOnGridPoint(ShipToPlace, Grid[RandomIndexToPlaceShip]);
+			GridPointToPlaceShip->SetShipOnPoint(ShipToPlace);
+			ShipToPlace->SetShipGridPoint(GridPointToPlaceShip);
 			break;
 		}
 	}
@@ -202,6 +197,8 @@ void OceanMap::EndTurn()
 {
 	for (GridPoint* Point : Grid)
 	{
+		Point->ChangeWeatherConditionsRandomly();
+
 		if (Point->IsEmpty())
 		{
 			continue;
@@ -214,10 +211,6 @@ void OceanMap::EndTurn()
 			Point->MakeTreasure();
 			DestroyShipAtPoint(Point);
 		}
-
-		Point->ChangeWeatherConditionsRandomly();
-
-
 	}
 }
 
@@ -242,29 +235,25 @@ void OceanMap::StartTurn()
 	cout << "Start of Turn" << endl;
 	//Grid
 	//	AllShips
+	for (Ship* CurrentShip : AllShips)
+	{
+		GridPoint* ShipGridPoint = CurrentShip->GetShipGridPoint();
+
+		if (ShipGridPoint->HasBadWeatherConditions())
+		{
+			CurrentShip->ApplyDamage(SimulationStatics::DamageCausedByBadWeather);
+			cout << *CurrentShip << " got damage due to bad weather conditions at position: " << *ShipGridPoint << endl;
+		}
+
+		if (ShipGridPoint->HasTreasure())
+		{
+			CurrentShip->IncreaseGold(SimulationStatics::GoldRewardForTreasurePoint);
+			cout << *CurrentShip << " earned Gold since it is on top of a Treasure Point at: " << ShipGridPoint << endl;
+		}
+	}
+
 	for (GridPoint* Point : Grid)
 	{
-		if (Point->IsEmpty())
-		{
-			continue;
-		}
-
-		Ship* CurrentShip = Point->GetShipOnPoint();
-		if (CurrentShip)
-		{
-			if (Point->HasBadWeatherConditions())
-			{
-				CurrentShip->ApplyDamage(SimulationStatics::DamageCausedByBadWeather);
-				cout << *CurrentShip << " got damage due to bad weather conditions at position: " << Point->GetCoordinates()<<endl;
-			}
-
-			if (Point->HasTreasure())
-			{
-				CurrentShip->IncreaseGold(SimulationStatics::GoldRewardForTreasurePoint);
-				cout << *CurrentShip << " earned Gold since it is on top of a Treasure Point at: " << Point->GetCoordinates() << endl;
-			}
-		}
-
 		if (Point->HasPort())
 		{
 			ApplyChangesToPortNeighbors(Point);
@@ -300,35 +289,17 @@ void OceanMap::ApplyChangesToPortNeighbors(GridPoint* PortPoint)
 
 void OceanMap::ShipsMovePhase()
 {
-	for (GridPoint* Point : Grid)
+	for (Ship* CurrentShip : AllShips)
 	{
-		if (Point->IsEmpty())
-		{
-			continue;
-		}
-
-		Ship* CurrentShip = Point->GetShipOnPoint();
-		if (CurrentShip)
-		{
-			CurrentShip->Move(Grid, Point);
-		}
+		CurrentShip->Move(Grid, CurrentShip->GetShipGridPoint());
 	}
 }
 
 void OceanMap::ShipsActionPhase()
 {
-	for (GridPoint* Point : Grid)
+	for (Ship* CurrentShip : AllShips)
 	{
-		if (Point->IsEmpty())
-		{
-			continue;
-		}
-
-		Ship* CurrentShip = Point->GetShipOnPoint();
-		if (CurrentShip)
-		{
-
-		}
+		CurrentShip->Action();
 	}
 }
 	

@@ -14,7 +14,6 @@ public:
 	void Init();
 	//Places given ship to a GridPoint as long as it's not a port and there isn't any ship there
 	void PlaceShipOnAvailableGridPoint(Ship* ShipToPlace);
-	void PlaceShipOnGridPoint(Ship* ShipToPlace, GridPoint* Position);
 	void Terminate();
 	void PrintMap();
 	bool ShowMenu();
@@ -34,6 +33,7 @@ private:
 
 	//If point has a pirate ship on it then damage is applied to it, otherwise the ship is repaired by a %.
 	void ApplyChangesToPortNeighbors(GridPoint* PortPoint);
+	
 public:
 	void ShipsMovePhase();
 	void ShipsActionPhase();

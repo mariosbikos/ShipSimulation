@@ -25,6 +25,7 @@ int main()
 
 		//Action phase 
 		Map.ShipsActionPhase();
+
 		//End Turn Phase
 		Map.EndTurn();
 
