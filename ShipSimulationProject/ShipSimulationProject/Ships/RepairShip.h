@@ -9,4 +9,5 @@ public:
 	static int RepairShipID;
 private:
 	virtual void DoAction();
+	void RepairNeighborShip(Ship* OtherShip);
 };

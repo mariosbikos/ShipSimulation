@@ -13,84 +13,51 @@
 #include "ShipSimulationProject/OceanMap.h"
 #include <algorithm>
 #include <vector>
+#include <limits>
 
 int Ship::NumOfShips;
 
-void Ship::Move(vector<GridPoint*>& Grid, GridPoint* CurrentPoint)
+
+
+bool Ship::MoveToNewPosition(const Position2D& NewPosition)
 {
-	const Position2D& ShipCurrentPointCoords = CurrentPoint->GetCoordinates();
-	int RandomDirection = HelperFunctions::GetRandomIntWithinRange(0, NumOfDirections - 1);
+	bool ShipCanMoveToNewPosition = false;
+
+	if (NewPosition.AreCoordinatesValidOnMap())
+	{
+		int IndexToOldPosition = HelperFunctions::Convert2DIndexTo1DIndex(ShipGridPoint->GetCoordinates().X, ShipGridPoint->GetCoordinates().Y, OceanMap::NumCols);
+		int IndexToNewPosition = HelperFunctions::Convert2DIndexTo1DIndex(NewPosition.X, NewPosition.Y, OceanMap::NumCols);
+		if (!(CurrentOceanMap->Grid[IndexToNewPosition]->HasShip()) && !(CurrentOceanMap->Grid[IndexToNewPosition]->HasPort()))
+		{
+			CurrentOceanMap->Grid[IndexToOldPosition]->RemoveShipFromPoint();
+			CurrentOceanMap->Grid[IndexToNewPosition]->SetShipOnPoint(this);
+			this->SetShipGridPoint(CurrentOceanMap->Grid[IndexToNewPosition]); //We need to make the ship point to the new gridPosition since it moved
+			std::cout << "Ship: " << *this << " moved from Position: " << *CurrentOceanMap->Grid[IndexToOldPosition] << " to position: " << NewPosition << std::endl;
+			return true;
+		}
+	}
+
+	return false;
+}
+
+
+void Ship::Move()
+{
+	const Position2D& ShipCurrentPointCoords = ShipGridPoint->GetCoordinates();
+	MoveDirection RandomDirection = (MoveDirection)HelperFunctions::GetRandomIntWithinRange(0, NumOfDirections - 1);
 	bool ShipCanMoveToNewPosition = false;
 	int DirectionsCounter = 0;
 
-	while(!ShipCanMoveToNewPosition && DirectionsCounter < NumOfDirections)
+	while(DirectionsCounter < NumOfDirections)
 	{
-		Position2D NewPosition;
-		int IndexToNewPosition = 0;
+		Position2D NewPosition = ShipCurrentPointCoords.GetPointAfterMovingToDirection(RandomDirection, Speed);
 
-		switch (RandomDirection)
+		if (MoveToNewPosition(NewPosition))
 		{
-		case MoveDirection::NORTH:
-			NewPosition = ShipCurrentPointCoords + Position2D::UP()*Speed;
-			if (!NewPosition.AreCoordinatesValidOnMap())
-			{
-				break;
-			}
-			IndexToNewPosition = HelperFunctions::Convert2DIndexTo1DIndex(NewPosition.X, NewPosition.Y, OceanMap::NumCols);
-			if (NewPosition.X >= 0 && !(Grid[IndexToNewPosition]->HasShip()) && !(Grid[IndexToNewPosition]->HasPort()))
-			{
-				ShipCanMoveToNewPosition = true;
-			}
-			break;
-		case MoveDirection::EAST:
-			NewPosition = ShipCurrentPointCoords + Position2D::RIGHT()*Speed;
-			if (!NewPosition.AreCoordinatesValidOnMap())
-			{
-				break;
-			}
-			IndexToNewPosition = HelperFunctions::Convert2DIndexTo1DIndex(NewPosition.X, NewPosition.Y, OceanMap::NumCols);
-			if (NewPosition.Y < OceanMap::NumCols && !(Grid[IndexToNewPosition]->HasShip()) && !(Grid[IndexToNewPosition]->HasPort()))
-			{
-				ShipCanMoveToNewPosition = true;
-			}
-			break;
-		case MoveDirection::WEST:
-			NewPosition = ShipCurrentPointCoords + Position2D::LEFT()*Speed;
-			if (!NewPosition.AreCoordinatesValidOnMap())
-			{
-				break;
-			}
-			IndexToNewPosition = HelperFunctions::Convert2DIndexTo1DIndex(NewPosition.X, NewPosition.Y, OceanMap::NumCols);
-			if (NewPosition.Y >= 0 && !(Grid[IndexToNewPosition]->HasShip()) && !(Grid[IndexToNewPosition]->HasPort()))
-			{
-				ShipCanMoveToNewPosition = true;
-			}
-			break;
-		case MoveDirection::SOUTH:
-			NewPosition = ShipCurrentPointCoords + Position2D::LEFT()*Speed;
-			if (!NewPosition.AreCoordinatesValidOnMap())
-			{
-				break;
-			}
-			IndexToNewPosition = HelperFunctions::Convert2DIndexTo1DIndex(NewPosition.X, NewPosition.Y, OceanMap::NumCols);
-			if (NewPosition.X < OceanMap::NumRows && !(Grid[IndexToNewPosition]->HasShip()) && !(Grid[IndexToNewPosition]->HasPort()))
-			{
-				ShipCanMoveToNewPosition = true;
-			}
-			break;
-		default:
 			break;
 		}
 
-		if (ShipCanMoveToNewPosition)
-		{
-			Grid[IndexToNewPosition]->SetShipOnPoint(this);
-			CurrentPoint->RemoveShipFromPoint();
-			std::cout << "Ship: " << *this << " moved from Position: " << *CurrentPoint << " to position: " << NewPosition << std::endl;
-			break;
-		}
-
-		RandomDirection = (RandomDirection + 1) % NumOfDirections; // try the next direction
+		RandomDirection = MoveDirection(((int)RandomDirection + 1) % NumOfDirections); // try the next direction
 		DirectionsCounter++;
 	}
 }
@@ -113,6 +80,11 @@ Ship::~Ship()
 }
 
 
+
+void Ship::SetupOceanMap(OceanMap* InOceanMap)
+{
+	CurrentOceanMap = InOceanMap;
+}
 
 void Ship::Action()
 {
@@ -169,6 +141,12 @@ void Ship::IncreaseGold(const double GoldAmount)
 	Gold += GoldAmount;
 }
 
+void Ship::DecreaseGold(const double GoldAmount)
+{
+	Gold -= GoldAmount;
+	HelperFunctions::Clamp(Gold, 0.0, std::numeric_limits<double>::max());
+}
+
 double Ship::GetCurrentGold() const
 {
 	return Gold;
@@ -181,11 +159,12 @@ bool Ship::IsDamaged() const
 
 void Ship::RepairShipDurabilityFromPort()
 {
-	CurrentDurability += HelperFunctions::GetRandomFloatWithinRange(0, 1)*CurrentDurability;
-	if (CurrentDurability > MaxDurability)
-	{
-		CurrentDurability = MaxDurability;
-	}
+	RepairShipDurability(HelperFunctions::GetRandomFloatWithinRange(0, 1)*CurrentDurability);
+}
+
+void Ship::RepairShipDurability(const double DurabilityToAdd)
+{
+	HelperFunctions::Clamp(CurrentDurability + DurabilityToAdd, 0.0, MaxDurability);
 }
 
 double Ship::GetCurrentDurability() const

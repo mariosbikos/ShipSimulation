@@ -9,7 +9,9 @@ namespace SimulationStatics
 	const int BadWeatherThreshold = 7;
 
 	const double NearPortGoldIncreaseForCargoShip = 10.0;
-	const double RepairCostInGold = 10.0;
+	const double RepairCostInGold = 2.0;
+
+	const double RepairShipDurabilityIncreaseAfterRepair = 2.0;
 
 	const double PercentageOfMaxRandomNumberOfShips = 0.2;
 
@@ -18,6 +20,6 @@ namespace SimulationStatics
 
 	const double GoldRewardForTreasurePoint = 2.0;
 
-	const double TargetGold = 20.0;
+	const double TargetGold = 30.0;
 
 }

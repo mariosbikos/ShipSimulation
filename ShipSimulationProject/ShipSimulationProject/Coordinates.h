@@ -8,8 +8,8 @@ enum MoveDirection
 {
 	NORTH,
 	EAST,
-	WEST,
 	SOUTH,
+	WEST,
 	NumOfDirections
 };
 
@@ -23,18 +23,26 @@ struct Position2D
 	int Y;
 
 	friend const Position2D operator+(const Position2D& CurrentPosition, const Position2D& OtherPosition);
+	friend const Position2D operator-(const Position2D& CurrentPosition, const Position2D& OtherPosition);
 	friend Position2D operator*(Position2D& CurrentPosition, const int& ScalarValue);
 	friend Position2D operator*(const int& ScalarValue, Position2D& CurrentPosition);
+	friend const bool operator==(const Position2D& CurrentPosition, const Position2D& OtherPosition);
 
+	static MoveDirection GetMoveDirectionForPositionVector(Position2D PositionVector);
 	static Position2D UP();
 	static Position2D DOWN();
 	static Position2D LEFT();
 	static Position2D RIGHT();
+	static MoveDirection GetOppositeDirection(const MoveDirection Direction);
 	friend ostream& operator<<(ostream &strm, const Position2D &a);
 
-	bool AreCoordinatesValidOnMap();
+	Position2D GetPointAfterMovingToDirection(const MoveDirection Direction, const int Speed) const;
+
+	bool AreCoordinatesValidOnMap() const;
 };
 
 const Position2D operator+(const Position2D& CurrentPosition, const Position2D& OtherPosition);
+const Position2D operator-(const Position2D& CurrentPosition, const Position2D& OtherPosition);
 Position2D operator*(Position2D& CurrentPosition, const int& ScalarValue);
 Position2D operator*(const int& ScalarValue, Position2D& CurrentPosition);
+const bool operator==(const Position2D& CurrentPosition, const Position2D& OtherPosition);

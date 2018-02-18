@@ -72,7 +72,7 @@ void OceanMap::CreateShips()
 	{
 		ShipType RandomType = (ShipType)HelperFunctions::GetRandomIntWithinRange(0, ShipType::NumOfDifferentShipTypes - 1);
 		Ship* NewShip = Ship::CreateShip(RandomType);
-		
+		NewShip->SetupOceanMap(this);
 		AllShips.push_back(NewShip);
 
 		PlaceShipOnAvailableGridPoint(NewShip);
@@ -250,7 +250,7 @@ void OceanMap::StartTurn()
 		if (ShipGridPoint->HasTreasure())
 		{
 			CurrentShip->IncreaseGold(SimulationStatics::GoldRewardForTreasurePoint);
-			cout << *CurrentShip << " earned Gold since it is on top of a Treasure Point at: " << ShipGridPoint << endl;
+			cout << *CurrentShip << " earned: "<< SimulationStatics::GoldRewardForTreasurePoint <<" Gold since it is on top of a Treasure Point at: " << *ShipGridPoint << endl;
 		}
 	}
 
@@ -295,7 +295,7 @@ void OceanMap::ShipsMovePhase()
 	cout <<endl<< endl << "--- MOVE PHASE---" << endl<< endl;
 	for (Ship* CurrentShip : AllShips)
 	{
-		CurrentShip->Move(Grid, CurrentShip->GetShipGridPoint());
+		CurrentShip->Move();
 	}
 }
 

@@ -10,4 +10,5 @@ public:
 private:
 	virtual void DoAction();
 	
+	void MoveToAvoidEnemies(MoveDirection Direction);
 };

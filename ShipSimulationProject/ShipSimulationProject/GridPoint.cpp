@@ -51,7 +51,7 @@ void GridPoint::ChangeWeatherConditionsRandomly()
 	int WeatherChangeValue = HelperFunctions::GetRandomIntWithinRange(-1, 1);
 	WeatherConditionLevel = HelperFunctions::Clamp(WeatherConditionLevel +WeatherChangeValue,1,10);
 
-	cout << "Weather Conditions changed from : "<< PreviousWeatherCondition<<" to: "<<WeatherConditionLevel<<" at Point: " << this->GetCoordinates() << endl;
+	//cout << "Weather Conditions changed from : "<< PreviousWeatherCondition<<" to: "<<WeatherConditionLevel<<" at Point: " << this->GetCoordinates() << endl;
 }
 
 bool GridPoint::HasPort() const
@@ -138,30 +138,33 @@ std::vector<GridPoint*> GridPoint::GetNeighborPoints()
 {
 	vector<GridPoint*>& OceanGrid = PointOceanMap->Grid;
 	std::vector<GridPoint*> NeighborPoints;
-
+	Position2D NeighborPointCoordinates;
 	if (CoordinatesOnGrid.Y < OceanMap::NumCols - 1)
 	{
 		//right(always, unless col=numCols-1)
-		NeighborPoints.push_back(OceanGrid[HelperFunctions::Convert2DIndexTo1DIndex(CoordinatesOnGrid.X, CoordinatesOnGrid.Y + 1, OceanMap::NumCols)]);
+		NeighborPointCoordinates = CoordinatesOnGrid + Position2D::RIGHT();
+		NeighborPoints.push_back(OceanGrid[HelperFunctions::Convert2DIndexTo1DIndex(NeighborPointCoordinates.X, NeighborPointCoordinates.Y, OceanMap::NumCols)]);
 	}
 
 	if (CoordinatesOnGrid.Y > 0)
 	{
 		//left(always unless col=0)
-		NeighborPoints.push_back(OceanGrid[HelperFunctions::Convert2DIndexTo1DIndex(CoordinatesOnGrid.X, CoordinatesOnGrid.Y - 1, OceanMap::NumCols)]);
+		NeighborPointCoordinates = CoordinatesOnGrid + Position2D::LEFT();
+		NeighborPoints.push_back(OceanGrid[HelperFunctions::Convert2DIndexTo1DIndex(NeighborPointCoordinates.X, NeighborPointCoordinates.Y, OceanMap::NumCols)]);
 	}
 
 	if (CoordinatesOnGrid.X > 0)
 	{
 		//Up(always unless row=0)
-		NeighborPoints.push_back(OceanGrid[HelperFunctions::Convert2DIndexTo1DIndex(CoordinatesOnGrid.X - 1, CoordinatesOnGrid.Y, OceanMap::NumCols)]);
-
+		NeighborPointCoordinates = CoordinatesOnGrid + Position2D::UP();
+		NeighborPoints.push_back(OceanGrid[HelperFunctions::Convert2DIndexTo1DIndex(NeighborPointCoordinates.X, NeighborPointCoordinates.Y, OceanMap::NumCols)]);
 	}
 
 	if (CoordinatesOnGrid.X < OceanMap::NumRows - 1)
 	{
 		//down(always unless row = numRows-1)
-		NeighborPoints.push_back(OceanGrid[HelperFunctions::Convert2DIndexTo1DIndex(CoordinatesOnGrid.X + 1, CoordinatesOnGrid.Y, OceanMap::NumCols)]);
+		NeighborPointCoordinates = CoordinatesOnGrid + Position2D::DOWN();
+		NeighborPoints.push_back(OceanGrid[HelperFunctions::Convert2DIndexTo1DIndex(NeighborPointCoordinates.X, NeighborPointCoordinates.Y, OceanMap::NumCols)]);
 	}
 
 	return NeighborPoints;
