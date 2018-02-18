@@ -10,5 +10,4 @@ public:
 private:
 	virtual void DoAction();
 
-	void GainGoldFromClosePort();
 };

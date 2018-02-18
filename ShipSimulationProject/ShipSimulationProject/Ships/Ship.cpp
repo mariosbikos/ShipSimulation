@@ -112,6 +112,8 @@ Ship::~Ship()
 	NumOfShips--;
 }
 
+
+
 void Ship::Action()
 {
 	this->DoAction();

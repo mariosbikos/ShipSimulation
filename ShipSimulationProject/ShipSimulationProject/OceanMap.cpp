@@ -72,7 +72,7 @@ void OceanMap::CreateShips()
 	{
 		ShipType RandomType = (ShipType)HelperFunctions::GetRandomIntWithinRange(0, ShipType::NumOfDifferentShipTypes - 1);
 		Ship* NewShip = Ship::CreateShip(RandomType);
-
+		
 		AllShips.push_back(NewShip);
 
 		PlaceShipOnAvailableGridPoint(NewShip);
@@ -101,6 +101,7 @@ void OceanMap::InitializeMapWithGridPoints()
 			
 			GridPoint* point = new GridPoint(Row, Col, RandomWeatherConditionLevel, IsPort, HasTreasure);
 			Grid.push_back(point);
+			point->SetOceanMap(this);
 		}
 	}
 }
@@ -195,6 +196,7 @@ bool OceanMap::CheckForEndConditions()
 
 void OceanMap::EndTurn()
 {
+	cout  << endl << endl<< "---END TURN---" << endl << endl;
 	for (GridPoint* Point : Grid)
 	{
 		Point->ChangeWeatherConditionsRandomly();
@@ -232,7 +234,7 @@ void OceanMap::DestroyShipAtPoint(GridPoint* Point)
 
 void OceanMap::StartTurn()
 {
-	cout << "Start of Turn" << endl;
+	cout <<endl<<  endl <<"---START TURN---" << endl << endl;
 	//Grid
 	//	AllShips
 	for (Ship* CurrentShip : AllShips)
@@ -265,7 +267,7 @@ void OceanMap::StartTurn()
 void OceanMap::ApplyChangesToPortNeighbors(GridPoint* PortPoint)
 {
 	//Need vector of GridPoints neighbors
-	std::vector<GridPoint*>& Neighbors = GetNeighborsForPoint(PortPoint);
+	std::vector<GridPoint*>& Neighbors = PortPoint->GetNeighborPoints();
 	for (GridPoint* NeighborPoint : Neighbors)
 	{
 		Ship* NeighborShip = NeighborPoint->GetShipOnPoint();
@@ -279,6 +281,7 @@ void OceanMap::ApplyChangesToPortNeighbors(GridPoint* PortPoint)
 			}
 			else
 			{
+				//TODO: Move all couts inside the ship class+only print if durability<max
 				NeighborShip->RepairShipDurabilityFromPort();
 				cout << *NeighborShip << " at Point: " << NeighborPoint->GetCoordinates() << " was repaired from neighbor Port at: " << PortPoint->GetCoordinates() << endl;
 			}
@@ -289,6 +292,7 @@ void OceanMap::ApplyChangesToPortNeighbors(GridPoint* PortPoint)
 
 void OceanMap::ShipsMovePhase()
 {
+	cout <<endl<< endl << "--- MOVE PHASE---" << endl<< endl;
 	for (Ship* CurrentShip : AllShips)
 	{
 		CurrentShip->Move(Grid, CurrentShip->GetShipGridPoint());
@@ -297,6 +301,7 @@ void OceanMap::ShipsMovePhase()
 
 void OceanMap::ShipsActionPhase()
 {
+	cout << endl<< endl <<"---ACTION PHASE---" << endl<< endl;
 	for (Ship* CurrentShip : AllShips)
 	{
 		CurrentShip->Action();

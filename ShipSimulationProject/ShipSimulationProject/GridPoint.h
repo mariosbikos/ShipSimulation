@@ -1,9 +1,13 @@
 #pragma once
 #include <iostream>
 #include <string>
+#include <vector>
 #include "Coordinates.h"
 
+using namespace std;
+
 class Ship;
+class OceanMap;
 
 class GridPoint
 {
@@ -16,6 +20,8 @@ public:
 	void SetShipOnPoint(Ship* InShip);
 	std::string GetSymbol();
 
+	std::vector<GridPoint*> GetNeighborPoints();
+	void SetOceanMap(OceanMap* InOceanMap);
 	static int NumOfTreasures;
 	static int NumOfPorts;
 
@@ -34,6 +40,8 @@ public:
 	const Position2D& GetCoordinates() const;
 	void SetCoordinates(const Position2D& InCoords);
 
+	
+
 	friend std::ostream& operator<<(std::ostream& out, const GridPoint& Point);
 private:
 	Position2D CoordinatesOnGrid;
@@ -43,7 +51,7 @@ private:
 
 	//points to a ship that may occupy this point
 	Ship* ShipOnPoint = nullptr;
-	
+	OceanMap* PointOceanMap;
 	
 };
 

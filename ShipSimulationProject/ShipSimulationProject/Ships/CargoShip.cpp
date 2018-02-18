@@ -1,6 +1,7 @@
 #include "CargoShip.h"
 #include "ShipSimulationProject/SimulationStatics.h"
 #include "ShipSimulationProject/HelperFunctions.h"
+#include "ShipSimulationProject/GridPoint.h"
 #include <string>
 
 
@@ -20,11 +21,15 @@ CargoShip::~CargoShip()
 void CargoShip::DoAction()
 {
 	//if port in neighborhood, increase this->gold by standard value
-	GainGoldFromClosePort();
+	for (const GridPoint* NeighborPoint : ShipGridPoint->GetNeighborPoints())
+	{
+		if (NeighborPoint->HasPort())
+		{
+			int GoldEarnedFromPort = SimulationStatics::NearPortGoldIncreaseForCargoShip;
+			this->Gold += GoldEarnedFromPort;
+			cout << "Ship: " << *this << " earned:" << GoldEarnedFromPort << " Gold from neighbor Port at: " << *NeighborPoint << endl;
+		}
+	}
 }
 
-void CargoShip::GainGoldFromClosePort()
-{
-	this->Gold += SimulationStatics::NearPortGoldIncreaseForCargoShip;
-}
 

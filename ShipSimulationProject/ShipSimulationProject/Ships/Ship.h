@@ -39,6 +39,7 @@ protected:
 	int Speed;
 	double Gold=0;
 	std::string Name;
+	
 
 	GridPoint* ShipGridPoint = nullptr;
 
