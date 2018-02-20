@@ -15,34 +15,35 @@ public:
 	GridPoint(int InX, int InY, int InWeatherConditionLevel, bool InHasTreasure, bool InIsPort);
 	~GridPoint();
 
-	Ship* GetShipOnPoint();
-
-	void SetShipOnPoint(Ship* InShip);
-	std::string GetSymbol();
-
-	std::vector<GridPoint*> GetNeighborPoints();
-	void SetOceanMap(OceanMap* InOceanMap);
 	static int NumOfTreasures;
 	static int NumOfPorts;
 
+	Ship* GetShipOnPoint();
+	void SetShipOnPoint(Ship* InShip);
+
+	std::string GetSymbol();
+
+	std::vector<GridPoint*> GetNeighborPoints();
+
+	void SetOceanMap(OceanMap* InOceanMap);
 
 	bool HasBadWeatherConditions() const;
 	void ChangeWeatherConditionsRandomly();
 	
-	bool HasPort() const;
 	bool IsEmpty() const;
+	bool HasPort() const;
 	bool HasTreasure() const;
 	bool HasShip() const;
-	void MakeTreasure();
+
+	void ConvertToTreasure();
 
 	void RemoveShipFromPoint();
 
 	const Position2D& GetCoordinates() const;
 	void SetCoordinates(const Position2D& InCoords);
 
-	
-
 	friend std::ostream& operator<<(std::ostream& out, const GridPoint& Point);
+
 private:
 	Position2D CoordinatesOnGrid;
 	int WeatherConditionLevel; //between 1-10

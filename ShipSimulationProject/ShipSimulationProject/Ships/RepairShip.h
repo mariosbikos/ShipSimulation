@@ -6,8 +6,12 @@ class RepairShip : public Ship
 public:
 	RepairShip();
 	virtual ~RepairShip();
+
 	static int RepairShipID;
-private:
+
+protected:
 	virtual void DoAction();
+
+private:
 	void RepairNeighborShip(Ship* OtherShip);
 };

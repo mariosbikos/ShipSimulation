@@ -34,12 +34,12 @@ void PirateShip::DoAction()
 
 void PirateShip::AttackShip(Ship* otherShip)
 {
-	otherShip->ApplyDamage(this->AttackDamage);
+	otherShip->ChangeDurability(-this->AttackDamage);
 	int GoldToSteal = HelperFunctions::GetRandomFloatWithinRange(0, 1) * otherShip->GetCurrentGold();
 	if (GoldToSteal > 0) //otherShip might not have any gold
 	{
-		otherShip->DecreaseGold(GoldToSteal);
-		this->IncreaseGold(GoldToSteal);
+		otherShip->ChangeGold(-GoldToSteal);
+		this->ChangeGold(GoldToSteal);
 	}
 	cout << "Ship: " << *this << " attacked Ship:"<<*otherShip<<" and stole: "<< GoldToSteal<< endl;
 }

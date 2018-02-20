@@ -14,8 +14,5 @@ protected:
 	
 	virtual void DoAction();
 	int AttackDamage = 1;
-	//always speed = 1;
-
-private:
 	
 };

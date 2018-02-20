@@ -24,18 +24,18 @@ void RepairShip::DoAction()
 	{
 		if (NeighborPoint->HasShip() && NeighborPoint->GetShipOnPoint()->IsDamaged())
 		{
-			RepairNeighborShip(NeighborPoint->GetShipOnPoint());
+			RepairNeighborShipForGold(NeighborPoint->GetShipOnPoint());
 		}
 	}
 }
 
-void RepairShip::RepairNeighborShip(Ship* OtherShip)
+void RepairShip::RepairNeighborShipForGold(Ship* OtherShip)
 {
 	if (OtherShip->GetCurrentGold() >= SimulationStatics::RepairCostInGold)
 	{
-		OtherShip->DecreaseGold(SimulationStatics::RepairCostInGold);
-		this->IncreaseGold(SimulationStatics::RepairCostInGold);
-		OtherShip->RepairShipDurability(SimulationStatics::RepairShipDurabilityIncreaseAfterRepair);
+		OtherShip->ChangeGold(-SimulationStatics::RepairCostInGold);
+		this->ChangeGold(SimulationStatics::RepairCostInGold);
+		OtherShip->ChangeDurability(SimulationStatics::RepairShipDurabilityIncreaseAfterRepair);
 		cout << "Ship: " << *this << " Repaired Ship: " << *OtherShip << " at Position: "<<*OtherShip->GetShipGridPoint()<< " by: "<< SimulationStatics::RepairShipDurabilityIncreaseAfterRepair <<" for: "<< SimulationStatics::RepairCostInGold<<" Gold" << endl;
 	}
 }

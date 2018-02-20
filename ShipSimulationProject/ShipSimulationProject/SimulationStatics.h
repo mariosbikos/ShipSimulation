@@ -13,7 +13,8 @@ namespace SimulationStatics
 
 	const double RepairShipDurabilityIncreaseAfterRepair = 2.0;
 
-	const double PercentageOfMaxRandomNumberOfShips = 0.2;
+	const int PercentageOfMinRandomNumberOfShips = 20;
+	const int PercentageOfMaxRandomNumberOfShips = 50;
 
 	const int DamageCausedByBadWeather = 7;
 	const int DamageCausedToPirateShipByPort = 2;

@@ -131,19 +131,15 @@ GridPoint* Ship::GetShipGridPoint() const
 	return ShipGridPoint;
 }
 
-void Ship::ApplyDamage(const int DamageValue)
+void Ship::ChangeDurability(const int DurabilityValue)
 {
-	CurrentDurability--;
+	CurrentDurability += DurabilityValue;
+	HelperFunctions::Clamp(CurrentDurability, 0.0, MaxDurability);
 }
 
-void Ship::IncreaseGold(const double GoldAmount)
+void Ship::ChangeGold(const double GoldAmount)
 {
 	Gold += GoldAmount;
-}
-
-void Ship::DecreaseGold(const double GoldAmount)
-{
-	Gold -= GoldAmount;
 	HelperFunctions::Clamp(Gold, 0.0, std::numeric_limits<double>::max());
 }
 
@@ -159,12 +155,7 @@ bool Ship::IsDamaged() const
 
 void Ship::RepairShipDurabilityFromPort()
 {
-	RepairShipDurability(HelperFunctions::GetRandomFloatWithinRange(0, 1)*CurrentDurability);
-}
-
-void Ship::RepairShipDurability(const double DurabilityToAdd)
-{
-	HelperFunctions::Clamp(CurrentDurability + DurabilityToAdd, 0.0, MaxDurability);
+	ChangeDurability(HelperFunctions::GetRandomFloatWithinRange(0, 1)*CurrentDurability);
 }
 
 double Ship::GetCurrentDurability() const

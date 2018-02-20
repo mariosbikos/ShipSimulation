@@ -8,13 +8,14 @@ using namespace std;
 class OceanMap
 {
 public:
+	OceanMap();
+	~OceanMap();
 	vector<GridPoint*> Grid;
-	vector<Ship*> AllShips;
+	vector<Ship*> ShipsOnMap;
 
-	void Init();
+	
 	//Places given ship to a GridPoint as long as it's not a port and there isn't any ship there
 	void PlaceShipOnAvailableGridPoint(Ship* ShipToPlace);
-	void Terminate();
 	void PrintMap();
 	bool ShowMenu();
 	bool CheckForEndConditions();

@@ -103,6 +103,11 @@ Ship* GridPoint::GetShipOnPoint()
 void GridPoint::SetShipOnPoint(Ship* InShip)
 {
 	ShipOnPoint = InShip;
+	if (InShip)
+	{
+		InShip->SetShipGridPoint(this);
+	}
+	
 }
 
 std::string GridPoint::GetSymbol()

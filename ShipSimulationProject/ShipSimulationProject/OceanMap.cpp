@@ -26,21 +26,22 @@ enum MenuChoice
 	Stats	
 };
 
-void OceanMap::Init()
+
+OceanMap::OceanMap()
 {
 	QueryUserForMapSize();
 	InitializeMapWithGridPoints();
 	CreateShips();
 }
 
-void OceanMap::Terminate()
+OceanMap::~OceanMap()
 {
 	for (GridPoint* Gridpoint : Grid)
 	{
 		delete Gridpoint;
 	}
 
-	for (Ship* ShipInGrid : AllShips)
+	for (Ship* ShipInGrid : ShipsOnMap)
 	{
 		delete ShipInGrid;
 	}
@@ -48,32 +49,33 @@ void OceanMap::Terminate()
 
 void OceanMap::PlaceShipOnAvailableGridPoint(Ship* ShipToPlace)
 {
-	while (true)
+	vector<GridPoint*> PossiblePointsToPlaceShip;
+	for (GridPoint* CurrentGridPoint : Grid)
 	{
-		int RandomIndexToPlaceShip = HelperFunctions::GetRandomIntWithinRange(0, (NumCols*NumRows) - 1);
-		GridPoint* GridPointToPlaceShip = Grid[RandomIndexToPlaceShip];
-		if (!GridPointToPlaceShip->HasShip() && 
-			!GridPointToPlaceShip->HasPort() && 
-			!GridPointToPlaceShip->HasShip())
+		if (!CurrentGridPoint->HasShip() && !CurrentGridPoint->HasPort())
 		{
-			GridPointToPlaceShip->SetShipOnPoint(ShipToPlace);
-			ShipToPlace->SetShipGridPoint(GridPointToPlaceShip);
-			break;
+			PossiblePointsToPlaceShip.push_back(CurrentGridPoint);
 		}
 	}
+
+	int RandomIndexToPlaceShip = HelperFunctions::GetRandomIntWithinRange(0, PossiblePointsToPlaceShip.size() - 1);
+	Grid[RandomIndexToPlaceShip]->SetShipOnPoint(ShipToPlace);
+		
 }
 
 void OceanMap::CreateShips()
 {
-	int AvailableEmptySpacesForShips = (NumCols*NumRows) - GridPoint::NumOfPorts;
-	//Create random ships of each type but make sure they fit the map
-	int NumOfShipsToCreate = (int)HelperFunctions::GetRandomFloatWithinRange(1, HelperFunctions::Clamp(round(SimulationStatics::PercentageOfMaxRandomNumberOfShips*static_cast<double>(AvailableEmptySpacesForShips)),1.0, (double)AvailableEmptySpacesForShips));
+	int AvailableEmptySpacesForShips = (NumCols*NumRows) - GridPoint::NumOfPorts; //We won't place a ship on a port
+
+	//Create random ships of each type by getting a random percentage within a range w.r.t the max available positions to place a ship
+	double PercentageOfShipsToCreate = HelperFunctions::GetRandomIntWithinRange(SimulationStatics::PercentageOfMinRandomNumberOfShips, SimulationStatics::PercentageOfMaxRandomNumberOfShips);
+	int NumOfShipsToCreate = static_cast<int>((PercentageOfShipsToCreate/100.0)* AvailableEmptySpacesForShips) ;
 	for (int i = 0; i < NumOfShipsToCreate; i++)
 	{
 		ShipType RandomType = (ShipType)HelperFunctions::GetRandomIntWithinRange(0, ShipType::NumOfDifferentShipTypes - 1);
-		Ship* NewShip = Ship::CreateShip(RandomType);
+		Ship* NewShip = Ship::CreateShip(RandomType); //Factory method
 		NewShip->SetupOceanMap(this);
-		AllShips.push_back(NewShip);
+		ShipsOnMap.push_back(NewShip);
 
 		PlaceShipOnAvailableGridPoint(NewShip);
 	}
@@ -85,14 +87,14 @@ void OceanMap::InitializeMapWithGridPoints()
 	{
 		for (int Col = 0; Col < NumCols; Col++)
 		{
-			int RandomNumberForType = HelperFunctions::GetRandomIntWithinRange(0, 100);
+			int RandomNumberForTypeOfPointAssignment = HelperFunctions::GetRandomIntWithinRange(0, 100);
 			bool IsPort = false;
 			bool HasTreasure = false;
-			if (RandomNumberForType < SimulationStatics::ChanceForPortPercentage)
+			if (RandomNumberForTypeOfPointAssignment < SimulationStatics::ChanceForPortPercentage)
 			{
 				IsPort = true;
 			}
-			else if (RandomNumberForType < SimulationStatics::ChanceForPortPercentage + SimulationStatics::ChanceForTreasurePercentage)
+			else if (RandomNumberForTypeOfPointAssignment < SimulationStatics::ChanceForPortPercentage + SimulationStatics::ChanceForTreasurePercentage)
 			{
 				HasTreasure = true;
 			}
@@ -161,7 +163,7 @@ bool OceanMap::ShowMenu()
 		cout << "Stats" << endl;
 		cout << "Num Of Ports: " <<GridPoint::NumOfPorts<< endl;
 		cout << "Num Of Treasures: " << GridPoint::NumOfTreasures << endl;
-		cout << "Num Of Ships: " << AllShips.size() << endl;
+		cout << "Num Of Ships: " << ShipsOnMap.size() << endl;
 		cout << "Num Of Pirate Ships: " << PirateShip::PirateShipID << endl;
 		cout << "Num Of Cargo Ships: " << CargoShip::CargoShipID << endl;
 		cout << "Num Of Repair Ships: " << RepairShip::RepairShipID << endl;
@@ -183,7 +185,7 @@ bool OceanMap::CheckForEndConditions()
 		return true;
 	}
 
-	for (Ship* CurrentShip : AllShips)
+	for (Ship* CurrentShip : ShipsOnMap)
 	{
 		if (CurrentShip->GetCurrentGold() >= SimulationStatics::TargetGold)
 		{
@@ -210,8 +212,8 @@ void OceanMap::EndTurn()
 		if (CurrentShip && CurrentShip->GetCurrentDurability()<=0)
 		{
 			cout << *CurrentShip << " was destroyed and replaced with Treasure at: " << Point->GetCoordinates() << endl;
-			Point->MakeTreasure();
 			DestroyShipAtPoint(Point);
+			Point->MakeTreasure();
 		}
 	}
 }
@@ -220,13 +222,12 @@ void OceanMap::DestroyShipAtPoint(GridPoint* Point)
 {
 	Ship* ShipToDestroy = Point->GetShipOnPoint();
 
-	std::vector<Ship*>::iterator position = std::find(AllShips.begin(), AllShips.end(), ShipToDestroy);
-	if (position != AllShips.end()) // == myVector.end() means the element was not found
+	std::vector<Ship*>::iterator position = std::find(ShipsOnMap.begin(), ShipsOnMap.end(), ShipToDestroy);
+	if (position != ShipsOnMap.end())
 	{
-		AllShips.erase(position);
+		ShipsOnMap.erase(position);
 		delete ShipToDestroy;
 	}
-		
 
 	Point->RemoveShipFromPoint();
 }
@@ -235,22 +236,21 @@ void OceanMap::DestroyShipAtPoint(GridPoint* Point)
 void OceanMap::StartTurn()
 {
 	cout <<endl<<  endl <<"---START TURN---" << endl << endl;
-	//Grid
-	//	AllShips
-	for (Ship* CurrentShip : AllShips)
+	
+	for (Ship* CurrentShip : ShipsOnMap)
 	{
 		GridPoint* ShipGridPoint = CurrentShip->GetShipGridPoint();
 
 		if (ShipGridPoint->HasBadWeatherConditions())
 		{
-			CurrentShip->ApplyDamage(SimulationStatics::DamageCausedByBadWeather);
-			cout << *CurrentShip << " got damage due to bad weather conditions at position: " << *ShipGridPoint << endl;
+			CurrentShip->ChangeDurability(-SimulationStatics::DamageCausedByBadWeather);
+			cout << *CurrentShip << " got: "<< SimulationStatics::DamageCausedByBadWeather<<" Damage due to bad weather conditions at position: " << *ShipGridPoint <<" Its durability is now: "<<CurrentShip->GetCurrentDurability()<< endl;
 		}
 
 		if (ShipGridPoint->HasTreasure())
 		{
-			CurrentShip->IncreaseGold(SimulationStatics::GoldRewardForTreasurePoint);
-			cout << *CurrentShip << " earned: "<< SimulationStatics::GoldRewardForTreasurePoint <<" Gold since it is on top of a Treasure Point at: " << *ShipGridPoint << endl;
+			CurrentShip->ChangeGold(SimulationStatics::GoldRewardForTreasurePoint);
+			cout << *CurrentShip << " earned: "<< SimulationStatics::GoldRewardForTreasurePoint <<" Gold since for being on a Treasure GridPoint at: " << *ShipGridPoint << endl;
 		}
 	}
 
@@ -266,7 +266,6 @@ void OceanMap::StartTurn()
 
 void OceanMap::ApplyChangesToPortNeighbors(GridPoint* PortPoint)
 {
-	//Need vector of GridPoints neighbors
 	std::vector<GridPoint*>& Neighbors = PortPoint->GetNeighborPoints();
 	for (GridPoint* NeighborPoint : Neighbors)
 	{
@@ -276,14 +275,14 @@ void OceanMap::ApplyChangesToPortNeighbors(GridPoint* PortPoint)
 			PirateShip* PirateNeighbor = dynamic_cast<PirateShip*>(NeighborShip);
 			if (PirateNeighbor)
 			{
-				NeighborShip->ApplyDamage(SimulationStatics::DamageCausedToPirateShipByPort);
-				cout << *NeighborShip << " at Point: " << NeighborPoint->GetCoordinates() << " got Damage due to Port at : " << PortPoint->GetCoordinates() << endl;
+				NeighborShip->ChangeDurability(-SimulationStatics::DamageCausedToPirateShipByPort);
+				cout << *NeighborShip << " at Point: " << NeighborPoint << " got Damage due to Port at : " << PortPoint << endl;
 			}
 			else
 			{
 				//TODO: Move all couts inside the ship class+only print if durability<max
 				NeighborShip->RepairShipDurabilityFromPort();
-				cout << *NeighborShip << " at Point: " << NeighborPoint->GetCoordinates() << " was repaired from neighbor Port at: " << PortPoint->GetCoordinates() << endl;
+				cout << *NeighborShip << " at Point: " << NeighborPoint << " was repaired from neighbor Port at: " << PortPoint << endl;
 			}
 		}
 	}
@@ -293,7 +292,7 @@ void OceanMap::ApplyChangesToPortNeighbors(GridPoint* PortPoint)
 void OceanMap::ShipsMovePhase()
 {
 	cout <<endl<< endl << "--- MOVE PHASE---" << endl<< endl;
-	for (Ship* CurrentShip : AllShips)
+	for (Ship* CurrentShip : ShipsOnMap)
 	{
 		CurrentShip->Move();
 	}
@@ -302,7 +301,7 @@ void OceanMap::ShipsMovePhase()
 void OceanMap::ShipsActionPhase()
 {
 	cout << endl<< endl <<"---ACTION PHASE---" << endl<< endl;
-	for (Ship* CurrentShip : AllShips)
+	for (Ship* CurrentShip : ShipsOnMap)
 	{
 		CurrentShip->Action();
 	}
